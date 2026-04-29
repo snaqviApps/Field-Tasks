@@ -1,10 +1,11 @@
-# This application demonstrates initial implementation of 
+#  This application demonstrates user input 
 - obsevering user-input
 - passing it to the details screen
 
 # Tools: 
  - Compose
- - Nav3
+ - sealed interface based state management
+ - Nav3 implementation with screens as state
 
 <table>
  <tr>
