@@ -19,7 +19,7 @@ import create.develop.secondproj.state.UserInfoState
 @Composable
 fun UserInputProvider(
     modifier: Modifier = Modifier,
-    state: UserInfoState,
+    state: UserInfoState.Success,
     onInputChangedID: (String) -> Unit,
     onInputChangedName: (String) -> Unit,
     onSubmit: () -> Unit
