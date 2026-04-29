@@ -9,7 +9,7 @@ class GetUserInputService : GetUserInput {
         id: String,
         name: String
     ) : UserInput {
-        print("$id $name")
+        print("here in @GetUserInputService: $id $name")
         return UserInput(id, name)
     }
 }

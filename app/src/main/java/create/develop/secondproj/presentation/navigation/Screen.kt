@@ -1,4 +1,4 @@
-package create.develop.secondproj.presentation
+package create.develop.secondproj.presentation.navigation
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable

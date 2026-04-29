@@ -7,7 +7,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
-import create.develop.secondproj.presentation.Screen
 import create.develop.secondproj.presentation.screen.UserDetailScreen
 import create.develop.secondproj.presentation.screen.UserInputScreen
 
