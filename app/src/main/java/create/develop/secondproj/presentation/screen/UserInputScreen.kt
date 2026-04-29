@@ -27,6 +27,7 @@ fun UserInputScreen(
                 CircularProgressIndicator()
             }
         }
+
         is UserInfoState.Success -> {
             UserInputProvider(
                 modifier = modifier,
@@ -42,8 +43,13 @@ fun UserInputScreen(
                 }
             )
         }
+
         is UserInfoState.Error -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(text = currentState.message)
             }
         }
