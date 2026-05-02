@@ -1,4 +1,4 @@
-#  This application demonstrates login Service 
+#  This application implements login Service 
 - obsevering user-input
 - passing it to the details screen
 
