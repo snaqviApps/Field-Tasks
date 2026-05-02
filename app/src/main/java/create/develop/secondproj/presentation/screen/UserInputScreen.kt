@@ -29,17 +29,17 @@ fun UserInputScreen(
         }
 
         is UserInfoState.Success -> {
-            UserInputProvider(
+            LoginScreen(
                 modifier = modifier,
                 state = currentState,
-                onInputChangedID = { id ->
+                onInputChangedUserName = { id ->
                     viewModel.onInputIdChanged(id)
                 },
-                onInputChangedName = { name ->
+                onInputChangedPassword = { name ->
                     viewModel.onInputNameChanged(name)
                 },
                 onSubmit = {
-                    onNavigateToDetail(currentState.userInput.id, currentState.userInput.name)
+                    onNavigateToDetail(currentState.loginRequest.username, currentState.loginRequest.password)
                 }
             )
         }

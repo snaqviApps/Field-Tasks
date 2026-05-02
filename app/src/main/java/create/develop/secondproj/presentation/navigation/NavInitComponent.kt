@@ -1,11 +1,10 @@
 package create.develop.secondproj.presentation.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import create.develop.secondproj.presentation.screen.UserDetailScreen
 import create.develop.secondproj.presentation.screen.UserInputScreen
@@ -14,11 +13,15 @@ import create.develop.secondproj.presentation.screen.UserInputScreen
 fun NavInitComponent(
     modifier: Modifier = Modifier
 ) {
-    val backStack = remember { mutableStateListOf<Any>(Screen.Input) }
+    val backStack = rememberNavBackStack(Screen.Input)
+
     NavDisplay(
         backStack = backStack,
+        contentAlignment = Alignment.Center,
         onBack = { backStack.removeLastOrNull() },
         entryProvider = { key ->
+            // Since key is of type NavKey, we use an exhaustive when with an else branch
+            // to ensure a non-nullable NavEntry is returned.
             when (key) {
                 is Screen.Input -> NavEntry(key) {
                     UserInputScreen(
@@ -37,7 +40,7 @@ fun NavInitComponent(
                     )
                 }
 
-                else -> NavEntry(Unit) { Text("Unknown route") }
+                else -> error("Unknown key type: $key")
             }
         }
     )

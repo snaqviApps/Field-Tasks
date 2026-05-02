@@ -13,15 +13,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import create.develop.secondproj.data.logging.local.LoginRequest
 import create.develop.secondproj.state.UserInfoState
 
 @Composable
-fun UserInputProvider(
+fun LoginScreen(
     modifier: Modifier = Modifier,
     state: UserInfoState.Success,
-    onInputChangedID: (String) -> Unit,
-    onInputChangedName: (String) -> Unit,
+    onInputChangedUserName: (String) -> Unit,
+    onInputChangedPassword: (String) -> Unit,
     onSubmit: () -> Unit
 ) {
     Card(
@@ -37,16 +39,16 @@ fun UserInputProvider(
                 .fillMaxSize()
         ) {
             TextField(
-                value = state.userInput.id,
-                onValueChange = { id ->
-                    onInputChangedID(id)
+                value = state.loginRequest.username,
+                onValueChange = { userName ->
+                    onInputChangedUserName(userName)
                 }
             )
             Spacer(Modifier.height(8.dp))
             TextField(
-                value = state.userInput.name,
-                onValueChange = { name ->
-                    onInputChangedName(name)
+                value = state.loginRequest.password,
+                onValueChange = { password ->
+                    onInputChangedPassword(password)
                 }
             )
             Spacer(Modifier.height(16.dp))
@@ -54,8 +56,20 @@ fun UserInputProvider(
                 onClick = onSubmit,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Submit")
+                Text("Log in")
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview(){
+    LoginScreen(
+        state = UserInfoState.Success(loginRequest = LoginRequest().copy(username = "username", password = "password")),
+        onInputChangedUserName = {},
+        onInputChangedPassword = {},
+        onSubmit = {}
+    )
+
 }
