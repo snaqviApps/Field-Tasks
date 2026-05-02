@@ -1,4 +1,4 @@
-#  This application demonstrates user input 
+#  This application demonstrates login Service 
 - obsevering user-input
 - passing it to the details screen
 
