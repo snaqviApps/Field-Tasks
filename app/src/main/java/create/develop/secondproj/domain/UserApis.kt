@@ -1,7 +1,7 @@
 package create.develop.secondproj.domain
 
-import create.develop.secondproj.data.logging.local.LoginRequest
-import create.develop.secondproj.data.logging.remote.LoginResponse
+import create.develop.secondproj.data.loggin.local.LoginRequest
+import create.develop.secondproj.data.loggin.remote.LoginResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

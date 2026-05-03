@@ -1,4 +1,4 @@
-package create.develop.secondproj.data.logging.remote
+package create.develop.secondproj.data.loggin.remote
 
 data class LoginResponse(
     val accessToken: String,

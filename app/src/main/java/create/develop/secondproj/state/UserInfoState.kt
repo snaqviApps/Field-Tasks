@@ -1,6 +1,6 @@
 package create.develop.secondproj.state
 
-import create.develop.secondproj.data.logging.local.LoginRequest
+import create.develop.secondproj.data.loggin.local.LoginRequest
 
 
 sealed interface UserInfoState {

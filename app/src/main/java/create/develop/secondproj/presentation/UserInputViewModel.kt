@@ -3,7 +3,7 @@ package create.develop.secondproj.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import create.develop.secondproj.data.GetUserService
-import create.develop.secondproj.data.logging.local.LoginRequest
+import create.develop.secondproj.data.loggin.local.LoginRequest
 import create.develop.secondproj.domain.UserGETApi
 import create.develop.secondproj.state.UserInfoState
 import kotlinx.coroutines.flow.MutableStateFlow
