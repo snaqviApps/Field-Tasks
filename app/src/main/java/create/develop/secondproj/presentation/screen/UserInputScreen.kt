@@ -17,7 +17,7 @@ import create.develop.secondproj.state.UserInfoState
 fun UserInputScreen(
     modifier: Modifier = Modifier,
     viewModel: UserInputViewModel = viewModel(),
-    onNavigateToDetail: (id: String, name: String) -> Unit,
+    onNavigateToDetail: (userName: String, password: String) -> Unit,
 ) {
     val state: UserInfoState by viewModel.userInputState.collectAsStateWithLifecycle()
 
@@ -32,13 +32,21 @@ fun UserInputScreen(
             LoginScreen(
                 modifier = modifier,
                 state = currentState,
-                onInputChangedUserName = { id ->
-                    viewModel.onInputIdChanged(id)
+                onInputChangedUserName = { uName ->
+                    viewModel.onInputIdChanged(uName)
                 },
-                onInputChangedPassword = { name ->
-                    viewModel.onInputNameChanged(name)
+                onInputChangedPassword = { pWord ->
+                    viewModel.onInputNameChanged(pWord)
                 },
                 onSubmit = {
+
+                    /**
+                     * call POST request to login user using UserServices: loginUser(LoginRequest via viewModel )
+                     * */
+                    { 
+                            // state.loginRequest.username.isNotEmpty() && state.loginRequest.password.isNotEmpty() {
+
+                    }
                     onNavigateToDetail(currentState.loginRequest.username, currentState.loginRequest.password)
                 }
             )

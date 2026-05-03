@@ -8,21 +8,33 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-// BASE URL: https://dummyjson.com/
-
 /**
- * Equivalent to the JS fetch('https://dummyjson.com/auth/me')
- * method: 'GET',
- * headers: { 'Authorization': 'Bearer ...' }
+ * fetch('https://dummyjson.com/auth/login', {
+ *   method: 'POST',
+ *   headers: { 'Content-Type': 'application/json' },
+ *   body: JSON.stringify({
+ *     username: 'emilys',
+ *     password: 'emilyspass',
+ *   })
+ * })
+ * .then(res => res.json())    // WHEN the response arrives, convert it to JSON
+ * .then(data => {             // WHEN the conversion is done, do something with the data
+ *   console.log(data);
+ * })
+ *
  */
-interface UserGETApi {
+
+interface UserApi {
+    /**
+     * Equivalent to the JS fetch('https://dummyjson.com/auth/me')
+     * method: 'GET',
+     * headers: { 'Authorization': 'Bearer ...' }
+     */
     @GET("auth/me")
     suspend fun getUserInfo(
         @Header("Authorization") token: String
-    ): Response<LoginResponse>                              // reusing LoginResponse class for now
-}
+    ): Response<LoginResponse>
 
-interface UserPOSTApi {
     @POST("auth/login")
     suspend fun loginUser(
         @Body loginRequest: LoginRequest

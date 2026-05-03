@@ -3,23 +3,23 @@ package create.develop.secondproj.data
 import create.develop.secondproj.domain.RetrofitBuilder.retrofit
 import create.develop.secondproj.data.loggin.local.LoginRequest
 import create.develop.secondproj.data.loggin.remote.LoginResponse
-import create.develop.secondproj.domain.UserGETApi
-import create.develop.secondproj.domain.UserPOSTApi
+import create.develop.secondproj.domain.UserApi
 import retrofit2.Response
 
+/**
+ * Consolidated implementation of UserApi.
+ * 
+ * We create the 'api' instance once as a property for better performance,
+ * as calling retrofit.create() repeatedly is expensive.
+ */
+class UserServices : UserApi {
+    private val api = retrofit.create(UserApi::class.java)
 
-class GetUserService : UserGETApi {
     override suspend fun getUserInfo(token: String): Response<LoginResponse> {
-        return retrofit.create(UserGETApi::class.java).getUserInfo(token)
+        return api.getUserInfo(token)
     }
 
-}
-
-
-class PostUserService : UserPOSTApi {
     override suspend fun loginUser(loginRequest: LoginRequest): Response<LoginResponse> {
-        return  retrofit.create(UserPOSTApi::class.java).loginUser(loginRequest)
+        return api.loginUser(loginRequest)
     }
-
-
 }

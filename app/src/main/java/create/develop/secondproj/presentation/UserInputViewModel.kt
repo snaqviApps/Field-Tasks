@@ -2,21 +2,20 @@ package create.develop.secondproj.presentation
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import create.develop.secondproj.data.GetUserService
+import create.develop.secondproj.data.UserServices
 import create.develop.secondproj.data.loggin.local.LoginRequest
-import create.develop.secondproj.domain.UserGETApi
+import create.develop.secondproj.domain.UserApi
 import create.develop.secondproj.state.UserInfoState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class UserInputViewModel(
-    private val getUserService: UserGETApi = GetUserService()           // for future implementation
+    private val useServices: UserApi = UserServices()           // for future implementation
 ) : ViewModel() {
 
     private val _userInputState = MutableStateFlow<UserInfoState>(UserInfoState.Success(LoginRequest()))
     val userInputState = _userInputState.asStateFlow()
-
 
     fun onInputIdChanged(userName: String) {
         _userInputState.update { currentState ->
