@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import create.develop.secondproj.presentation.UserInputViewModel
+import create.develop.secondproj.presentation.navigation.UiEvent
 import create.develop.secondproj.state.UserInfoState
 
 @Composable
@@ -19,6 +21,20 @@ fun UserInputScreen(
     viewModel: UserInputViewModel = viewModel(),
     onNavigateToDetail: (userName: String, password: String) -> Unit,
 ) {
+    // Collect one-time navigation events from the ViewModel
+    // This fixes the logic: navigation only happens when login succeeds,
+    // not automatically when the screen opens in a Success state.
+    LaunchedEffect(viewModel.uiEvent) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+//                is UserInputViewModel.UiEvent.NavigateToDetail -> {
+                is UiEvent.NavigateToDetail ->  {
+                    onNavigateToDetail(event.username, event.password)
+                }
+            }
+        }
+    }
+
     val state: UserInfoState by viewModel.userInputState.collectAsStateWithLifecycle()
 
     when (val currentState = state) {
@@ -29,6 +45,7 @@ fun UserInputScreen(
         }
 
         is UserInfoState.Success -> {
+            // LaunchedEffect removed from here to prevent infinite/automatic navigation
             LoginScreen(
                 modifier = modifier,
                 state = currentState,
@@ -39,23 +56,14 @@ fun UserInputScreen(
                     viewModel.onInputNameChanged(pWord)
                 },
                 onSubmit = {
-
-                    /**
-                     * call POST request to login user using UserServices: loginUser(LoginRequest via viewModel )
-                     * */
-                    { 
-                            // state.loginRequest.username.isNotEmpty() && state.loginRequest.password.isNotEmpty() {
-
-                    }
-                    onNavigateToDetail(currentState.loginRequest.username, currentState.loginRequest.password)
+                    viewModel.login()
                 }
             )
         }
 
         is UserInfoState.Error -> {
             Box(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = currentState.message)
