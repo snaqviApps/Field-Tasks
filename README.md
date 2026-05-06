@@ -17,7 +17,8 @@
    ## 
   <tr>
    <td>
-    <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/09a7b579-c75a-469a-b350-aedd24d8ebe8" />
+    <img width="1080" height="2340" alt="Screenshot_20260506_150802" src="https://github.com/user-attachments/assets/1365ad68-7091-471b-ad79-70ebdb4c0d9f" />
+
   </td>
   </tr>
 </table>
