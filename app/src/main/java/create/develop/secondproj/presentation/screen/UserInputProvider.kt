@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import create.develop.secondproj.data.loggin.local.LoginRequest
+import create.develop.secondproj.data.loggin.local.POSTRequestBody
 import create.develop.secondproj.state.UserInfoState
 
 @Composable
@@ -39,14 +39,14 @@ fun LoginScreen(
                 .fillMaxSize()
         ) {
             TextField(
-                value = state.loginRequest.username,
+                value = state.postRequestBody.username,
                 onValueChange = { userName ->
                     onInputChangedUserName(userName)
                 }
             )
             Spacer(Modifier.height(8.dp))
             TextField(
-                value = state.loginRequest.password,
+                value = state.postRequestBody.password,
                 onValueChange = { password ->
                     onInputChangedPassword(password)
                 }
@@ -66,7 +66,7 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview(){
     LoginScreen(
-        state = UserInfoState.Success(loginRequest = LoginRequest().copy(username = "username", password = "password")),
+        state = UserInfoState.Success(postRequestBody = POSTRequestBody().copy(username = "username", password = "password")),
         onInputChangedUserName = {},
         onInputChangedPassword = {},
         onSubmit = {}

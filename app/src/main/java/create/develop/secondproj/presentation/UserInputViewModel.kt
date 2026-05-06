@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import create.develop.secondproj.data.UserServices
-import create.develop.secondproj.data.loggin.local.LoginRequest
-import create.develop.secondproj.data.loggin.remote.LoginResponse
-import create.develop.secondproj.data.loggin.remote.toUserProfile
+import create.develop.secondproj.data.loggin.local.POSTRequestBody
+import create.develop.secondproj.data.loggin.remote.UserDetails
+import create.develop.secondproj.data.loggin.remote.toUserDetails
 import create.develop.secondproj.domain.UserApi
 import create.develop.secondproj.presentation.navigation.UiEvent
 import create.develop.secondproj.state.UserInfoState
@@ -16,52 +16,78 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class UserInputViewModel(
     private val useServices: UserApi = UserServices()
 ) : ViewModel() {
 
-    private var response: Response<LoginResponse>? = null
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    private val _userInputState = MutableStateFlow<UserInfoState>(UserInfoState.Success(LoginRequest()))
+    private val _userInputState =
+        MutableStateFlow<UserInfoState>(UserInfoState.Success(POSTRequestBody()))
     val userInputState = _userInputState.asStateFlow()
 
     fun login() {
+        val currentState = _userInputState.value
+        // We only start login if we are currently in a Success (Input) state
+        if (currentState !is UserInfoState.Success) return
+
+        val requestBody = currentState.postRequestBody
+
         viewModelScope.launch {
+            // Step 1: Set state to Loading
+            _userInputState.value = UserInfoState.Loading
+
             try {
-                val currentState = _userInputState.value
-                if (currentState is UserInfoState.Success) {
-                    val userName = currentState.loginRequest.username
-                    val password = currentState.loginRequest.password
+                // Step 2: Perform Login
+                val loginResponse = useServices.loginUser(requestBody)
 
-                    val loginResponse = useServices.loginUser(LoginRequest(userName, password))
-                    response = loginResponse
+                if (loginResponse.isSuccessful) {
+                    val token = loginResponse.body()?.accessToken
 
-                    if (loginResponse.isSuccessful) {
-                        val token = loginResponse.body()?.accessToken
-                        Log.d("UserInputViewModel_Success", token ?: "Token is null")
+                    if (!token.isNullOrEmpty()) {
+                        // Step 3: Fetch User Info using the token
+                        val infoResponse = useServices.getUserInfo("Bearer $token")
 
-                        if (!token.isNullOrEmpty()) {
-                            val infoResponse = useServices.getUserInfo("Bearer $token")
-                            if (infoResponse.isSuccessful) {
-                                val userInfo = infoResponse.body()?.toUserProfile()
-                                Log.d("UserInputViewModel_UserInfo", userInfo?.email ?: "Username email is empty")
-                            } else {
-                                Log.e("UserInputViewModel_Error", "User info fetch failed: ${infoResponse.code()}")
-                            }
+                        if (infoResponse.isSuccessful) {
+                            val userInfo: UserDetails? = infoResponse.body()?.toUserDetails()
+                            Log.d("UserInputViewModel", "Fetch success: ${userInfo?.email}")
+
+                            // Success -> Navigate
+                            _uiEvent.emit(
+                                UiEvent.NavigateToDetail(
+                                    userDetails = UserDetails(
+                                        email = userInfo?.email ?: "",
+                                        firstName = userInfo?.firstName ?: "",
+                                        gender = userInfo?.gender ?: "",
+                                        image = userInfo?.image ?: "",
+                                        lastName = userInfo?.lastName ?: "",
+                                        bloodGroup = userInfo?.bloodGroup ?: "",
+                                        birthDate = userInfo?.birthDate ?: "",
+                                        business = userInfo?.business,
+                                        address = userInfo?.address
+                                    )
+                                )
+                            )
+                            // Reset state back to Success (Input) so UI is ready if we navigate back
+                            _userInputState.value = UserInfoState.Success(POSTRequestBody())
+                        } else {
+                            _userInputState.value =
+                                UserInfoState.Error("Failed to fetch user profile: ${infoResponse.code()}")
                         }
-
-                        _uiEvent.emit(UiEvent.NavigateToDetail(userName, password))
                     } else {
-                        Log.e("UserInputViewModel_Error", "Login failed: ${loginResponse.code()}")
+                        _userInputState.value =
+                            UserInfoState.Error("Login succeeded but no token was received")
                     }
+                } else {
+                    _userInputState.value =
+                        UserInfoState.Error("Login failed: ${loginResponse.message()}")
                 }
-
             } catch (e: Exception) {
-                Log.e("UserInputViewModel_Exception", "Login operation failed", e)
+                Log.e("UserInputViewModel", "Operation failed", e)
+                _userInputState.value =
+                    UserInfoState.Error(e.localizedMessage ?: "An unexpected error occurred")
             }
         }
     }
@@ -69,19 +95,21 @@ class UserInputViewModel(
     fun onInputIdChanged(userName: String) {
         _userInputState.update { currentState ->
             if (currentState is UserInfoState.Success) {
-                currentState.copy(loginRequest = currentState.loginRequest.copy(username = userName))
+                currentState.copy(postRequestBody = currentState.postRequestBody.copy(username = userName))
             } else {
-                currentState
+                // If in Error/Loading, typing resets to Success with the new input
+                UserInfoState.Success(POSTRequestBody(username = userName))
             }
         }
     }
 
     fun onInputNameChanged(password: String) {
-        _userInputState.update { currentState : UserInfoState ->
+        _userInputState.update { currentState ->
             if (currentState is UserInfoState.Success) {
-                currentState.copy(loginRequest = currentState.loginRequest.copy(password = password))
+                currentState.copy(postRequestBody = currentState.postRequestBody.copy(password = password))
             } else {
-                currentState
+                // If in Error/Loading, typing resets to Success with the new input
+                UserInfoState.Success(POSTRequestBody(password = password))
             }
         }
     }

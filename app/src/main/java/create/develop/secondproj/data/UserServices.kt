@@ -1,8 +1,9 @@
 package create.develop.secondproj.data
 
 import create.develop.secondproj.domain.RetrofitBuilder.retrofit
-import create.develop.secondproj.data.loggin.local.LoginRequest
+import create.develop.secondproj.data.loggin.local.POSTRequestBody
 import create.develop.secondproj.data.loggin.remote.LoginResponse
+import create.develop.secondproj.data.loggin.remote.UserProfile
 import create.develop.secondproj.domain.UserApi
 import retrofit2.Response
 
@@ -15,11 +16,11 @@ import retrofit2.Response
 class UserServices : UserApi {
     private val api = retrofit.create(UserApi::class.java)
 
-    override suspend fun getUserInfo(token: String): Response<LoginResponse> {
+    override suspend fun getUserInfo(token: String): Response<UserProfile> {
         return api.getUserInfo(token)
     }
 
-    override suspend fun loginUser(loginRequest: LoginRequest): Response<LoginResponse> {
-        return api.loginUser(loginRequest)
+    override suspend fun loginUser(postRequestBody: POSTRequestBody): Response<LoginResponse> {
+        return api.loginUser(postRequestBody)
     }
 }

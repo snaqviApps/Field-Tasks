@@ -1,6 +1,6 @@
 package create.develop.secondproj.data.loggin.local
 
-data class LoginRequest(
+data class POSTRequestBody(
     val username: String = "",
     val password: String = "",
 )

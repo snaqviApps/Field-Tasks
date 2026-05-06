@@ -1,7 +1,8 @@
 package create.develop.secondproj.domain
 
-import create.develop.secondproj.data.loggin.local.LoginRequest
+import create.develop.secondproj.data.loggin.local.POSTRequestBody
 import create.develop.secondproj.data.loggin.remote.LoginResponse
+import create.develop.secondproj.data.loggin.remote.UserProfile
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -33,10 +34,11 @@ interface UserApi {
     @GET("auth/me")
     suspend fun getUserInfo(
         @Header("Authorization") token: String
-    ): Response<LoginResponse>
+//    ): Response<LoginResponse>
+    ): Response<UserProfile>
 
     @POST("auth/login")
     suspend fun loginUser(
-        @Body loginRequest: LoginRequest
+        @Body postRequestBody: POSTRequestBody
     ): Response<LoginResponse>
 }

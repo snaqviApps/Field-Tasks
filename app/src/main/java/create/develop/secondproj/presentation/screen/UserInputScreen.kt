@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import create.develop.secondproj.data.loggin.remote.Address
 import create.develop.secondproj.presentation.UserInputViewModel
 import create.develop.secondproj.presentation.navigation.UiEvent
 import create.develop.secondproj.state.UserInfoState
@@ -19,7 +20,16 @@ import create.develop.secondproj.state.UserInfoState
 fun UserInputScreen(
     modifier: Modifier = Modifier,
     viewModel: UserInputViewModel = viewModel(),
-    onNavigateToDetail: (userName: String, password: String) -> Unit,
+    onNavigateToDetail: (
+        email: String,
+        firstName: String,
+        gender: String,
+        image: String,
+        lastName: String,
+        birthDate: String,
+        bloodGroup: String,
+        business: Address?,          // needs to come from Company class
+        address: Address?) -> Unit,
 ) {
     // Collect one-time navigation events from the ViewModel
     // This fixes the logic: navigation only happens when login succeeds,
@@ -29,7 +39,17 @@ fun UserInputScreen(
             when (event) {
 //                is UserInputViewModel.UiEvent.NavigateToDetail -> {
                 is UiEvent.NavigateToDetail ->  {
-                    onNavigateToDetail(event.username, event.password)
+                    onNavigateToDetail(
+                        event.userDetails.email,
+                        event.userDetails.firstName,
+                        event.userDetails.gender,
+                        event.userDetails.image,
+                        event.userDetails.lastName,
+                        event.userDetails.birthDate,
+                        event.userDetails.bloodGroup,
+                        event.userDetails.business,
+                        event.userDetails.address
+                    )
                 }
             }
         }
@@ -66,7 +86,7 @@ fun UserInputScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = currentState.message)
+                Text(text = currentState.eMessage)
             }
         }
     }

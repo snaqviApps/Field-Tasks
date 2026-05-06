@@ -1,6 +1,7 @@
 package create.develop.secondproj.presentation.navigation
 
 import androidx.navigation3.runtime.NavKey
+import create.develop.secondproj.data.loggin.remote.UserDetails
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -10,5 +11,5 @@ sealed interface Screen : NavKey {
     data object Input : Screen
 
     @Serializable
-    data class Detail(val id: String, val name: String) : Screen
+    data class Detail(val userDetail: UserDetails) : Screen
 }
