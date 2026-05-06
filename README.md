@@ -10,7 +10,12 @@
 <table>
  <tr>
   <td>
-   <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/510bb997-d238-4788-aa06-a34bffcd98ed" />
+   <img width="1080" height="2340" alt="preEntry_login" src="https://github.com/user-attachments/assets/5a540dbb-d1b2-4d12-b139-8ce01ce8b0f9" />
+  </td>
+  <tr>
+ <tr>
+  <td>
+   <img width="1080" height="2340" alt="Screenshot_20260506_153225" src="https://github.com/user-attachments/assets/3522f3da-b1af-4c32-84ba-2bd60a4b95c9" />
   </td>
   <tr>
 
