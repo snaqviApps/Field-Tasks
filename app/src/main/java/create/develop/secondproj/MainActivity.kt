@@ -35,6 +35,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 fun UserInputScreenPreview() {
     SecondProjTheme {
-        UserInputScreen(onNavigateToDetail = {_, _, _, _, _, _, _, _, _ -> })
+        UserInputScreen(onNavigateToDetail = { _-> }
+        )
     }
 }

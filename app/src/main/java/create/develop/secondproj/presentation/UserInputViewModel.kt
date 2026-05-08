@@ -1,11 +1,10 @@
 package create.develop.secondproj.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import create.develop.secondproj.data.UserServices
 import create.develop.secondproj.data.loggin.local.POSTRequestBody
-import create.develop.secondproj.data.loggin.remote.UserDetails
+import create.develop.secondproj.data.loggin.remote.UserProfile
 import create.develop.secondproj.data.loggin.remote.toUserDetails
 import create.develop.secondproj.domain.UserApi
 import create.develop.secondproj.presentation.navigation.UiEvent
@@ -30,6 +29,7 @@ class UserInputViewModel(
 
     fun login() {
         val currentState = _userInputState.value
+
         // We only start login if we are currently in a Success (Input) state
         if (currentState !is UserInfoState.Success) return
 
@@ -38,7 +38,6 @@ class UserInputViewModel(
         viewModelScope.launch {
             // Step 1: Set state to Loading
             _userInputState.value = UserInfoState.Loading
-
             try {
                 // Step 2: Perform Login
                 val loginResponse = useServices.loginUser(requestBody)
@@ -51,27 +50,19 @@ class UserInputViewModel(
                         val infoResponse = useServices.getUserInfo("Bearer $token")
 
                         if (infoResponse.isSuccessful) {
-                            val userInfo: UserDetails? = infoResponse.body()?.toUserDetails()
-                            Log.d("UserInputViewModel", "Fetch success: ${userInfo?.email}")
+                            val userDetailsInfo: UserProfile? = infoResponse.body()
 
-                            // Success -> Navigate
-                            _uiEvent.emit(
-                                UiEvent.NavigateToDetail(
-                                    userDetails = UserDetails(
-                                        email = userInfo?.email ?: "",
-                                        firstName = userInfo?.firstName ?: "",
-                                        gender = userInfo?.gender ?: "",
-                                        image = userInfo?.image ?: "",
-                                        lastName = userInfo?.lastName ?: "",
-                                        bloodGroup = userInfo?.bloodGroup ?: "",
-                                        birthDate = userInfo?.birthDate ?: "",
-                                        business = userInfo?.business,
-                                        address = userInfo?.address
-                                    )
-                                )
-                            )
-                            // Reset state back to Success (Input) so UI is ready if we navigate back
-                            _userInputState.value = UserInfoState.Success(POSTRequestBody())
+                            if (userDetailsInfo != null) {
+                                val userDetails = userDetailsInfo.toUserDetails()
+
+                                // Success -> Navigate
+                                _uiEvent.emit(UiEvent.NavigateToDetail(userDetails = userDetails))
+
+                                // Reset state back to Success (Input) so UI is ready if we navigate back
+                                _userInputState.value = UserInfoState.Success(POSTRequestBody())
+                            } else {
+                                _userInputState.value = UserInfoState.Error("User profile is null")
+                            }
                         } else {
                             _userInputState.value =
                                 UserInfoState.Error("Failed to fetch user profile: ${infoResponse.code()}")
@@ -85,7 +76,6 @@ class UserInputViewModel(
                         UserInfoState.Error("Login failed: ${loginResponse.message()}")
                 }
             } catch (e: Exception) {
-                Log.e("UserInputViewModel", "Operation failed", e)
                 _userInputState.value =
                     UserInfoState.Error(e.localizedMessage ?: "An unexpected error occurred")
             }
