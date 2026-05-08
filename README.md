@@ -1,11 +1,16 @@
 #  This application implements Login Service 
-- obsevering user-input
-- passing it to the details screen
-
+- takes user input: username and password
+- makes POST service call. Upon receiving 'access token' successfully, passes it to the subsequent GET service
+- if successful, user detailed information that is received as a result, passed via Navigation to detailed screen
+  for display. 
+  
+ 
 # Tools: 
  - Compose
  - sealed interface based state management
- - Nav3 implementation with screens as state
+ - retrofit library for HTTP service calls
+ - Nav3 library for Navigation, that takes screens as serializable keys, hence each screen is a data class / object. 
+ - 
 
 <table>
  <tr>
