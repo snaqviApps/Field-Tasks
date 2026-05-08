@@ -72,9 +72,9 @@ fun UserDetailScreen(
                     Text(text = "Gender:", fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(6.dp))
                     Text(text = "Birth date:", fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text(text = "Address:", fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
                     Text(text = "Business:", fontWeight = FontWeight.Bold)
                 }
                 
@@ -88,7 +88,7 @@ fun UserDetailScreen(
                     Text(text = userDetail.gender)
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(text = userDetail.birthDate)
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     
                     // Improved Address formatting to avoid "null" strings
                     val addressText = if (userDetail.address != null) {
@@ -98,7 +98,7 @@ fun UserDetailScreen(
                     } else "N/A"
                     Text(text = addressText)
                     
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     
                     // Improved Business Address formatting
                     val businessText = if (userDetail.business != null) {
@@ -142,7 +142,7 @@ fun UserDetailScreenPreview() {
 
             email = "john.c.breckinridge@altostrat.com",
             address = Address(
-                address = "123 Main St",
+                address = "123 Main St, Apt # 1310",
                 city = "Cityville",
                 state = "State",
                 country = "Country",

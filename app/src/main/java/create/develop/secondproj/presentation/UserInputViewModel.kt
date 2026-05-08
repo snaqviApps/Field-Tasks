@@ -82,7 +82,7 @@ class UserInputViewModel(
         }
     }
 
-    fun onInputIdChanged(userName: String) {
+    fun onInputNameChanged(userName: String) {
         _userInputState.update { currentState ->
             if (currentState is UserInfoState.Success) {
                 currentState.copy(postRequestBody = currentState.postRequestBody.copy(username = userName))
@@ -92,7 +92,7 @@ class UserInputViewModel(
         }
     }
 
-    fun onInputNameChanged(password: String) {
+    fun onInputPasswordChanged(password: String) {
         _userInputState.update { currentState ->
             if (currentState is UserInfoState.Success) {
                 currentState.copy(postRequestBody = currentState.postRequestBody.copy(password = password))

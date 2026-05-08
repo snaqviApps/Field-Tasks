@@ -49,10 +49,10 @@ fun UserInputScreen(
                 modifier = modifier,
                 state = currentState,
                 onInputChangedUserName = { uName ->
-                    viewModel.onInputIdChanged(uName)
+                    viewModel.onInputNameChanged(uName)
                 },
                 onInputChangedPassword = { pWord ->
-                    viewModel.onInputNameChanged(pWord)
+                    viewModel.onInputPasswordChanged(pWord)
                 },
                 onSubmit = {
                     viewModel.login()
