@@ -9,7 +9,7 @@
  - Compose
  - sealed interface based state management
  - retrofit library for HTTP service calls
- - Nav3 library for Navigation, that takes screens as serializable keys, hence each screen is a data class object. It provides type safety. 
+ - Nav3 library for Navigation, that takes screens as serializable keys, hence each screen is a data object. It provides type safety. 
  - 
 
 <table>
