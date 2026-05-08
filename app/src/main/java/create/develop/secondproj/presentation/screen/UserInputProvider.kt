@@ -38,10 +38,10 @@ fun LoginScreen(
     onInputChangedPassword: (String) -> Unit,
     onSubmit: () -> Unit
 ) {
-    // State to track if the last character should be temporarily visible
+    // State to track if the last character should be temporarily visible (the "echo")
     var isLastCharVisible by remember { mutableStateOf(false) }
 
-    // When password changes, show the last character for 1 second (the "echo")
+    // When password changes, show the last character for 1 second
     LaunchedEffect(state.postRequestBody.password) {
         if (state.postRequestBody.password.isNotEmpty()) {
             isLastCharVisible = true
@@ -93,7 +93,7 @@ fun LoginScreen(
                     onInputChangedPassword(password)
                 },
                 label = { Text("Password") },
-                // Applying the custom echo transformation
+                // Use the custom echo transformation
                 visualTransformation = passwordTransformation,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
