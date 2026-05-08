@@ -1,8 +1,11 @@
 #  This application implements Login Service 
+
+#   Features and functionalites: 
 - takes user input: username and password
 - makes POST service call. Upon receiving 'access token' successfully, passes it to the subsequent GET service
 - if successful, user detailed information that is received as a result, passed via Navigation to detailed screen
-  for display. 
+  for display.
+- demonstrates __character-hide__, after user types in password
   
  
 # Tools: 
