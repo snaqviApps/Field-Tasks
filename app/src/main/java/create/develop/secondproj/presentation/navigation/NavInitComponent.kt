@@ -35,7 +35,9 @@ fun NavInitComponent(
                 }
 
                 is Screen.Detail -> NavEntry(key) {
-                    UserDetailScreen(key.userDetail)
+                    UserDetailScreen(
+                        modifier = modifier,
+                        key.userDetail)
                 }
 
                 else -> error("Unknown key type: $key")
