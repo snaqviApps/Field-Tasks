@@ -1,4 +1,4 @@
-package create.develop.secondproj.data.loggin.remote
+package create.develop.secondproj.data.loggin.remote.logindetailsdata
 
 import kotlinx.serialization.Serializable
 

@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import create.develop.secondproj.data.loggin.remote.UserDetails
+import create.develop.secondproj.data.loggin.remote.UserUIDetails
 import create.develop.secondproj.presentation.UserInputViewModel
 import create.develop.secondproj.presentation.navigation.UiEvent
 import create.develop.secondproj.state.UserInfoState
@@ -20,7 +20,7 @@ import create.develop.secondproj.state.UserInfoState
 fun UserInputScreen(
     modifier: Modifier = Modifier,
     viewModel: UserInputViewModel = viewModel(),
-    onNavigateToDetail: (userDetails: UserDetails) -> Unit,
+    onNavigateToDetail: (userUIDetails: UserUIDetails) -> Unit,
 ) {
     // Collect one-time navigation events from the ViewModel
     LaunchedEffect(viewModel.uiEvent) {
@@ -28,7 +28,7 @@ fun UserInputScreen(
             when (event) {
                 is UiEvent.NavigateToDetail -> {
                     onNavigateToDetail(
-                        event.userDetails
+                        event.userUIDetails
                     )
                 }
             }

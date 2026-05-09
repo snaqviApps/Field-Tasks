@@ -26,7 +26,7 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import create.develop.secondproj.data.loggin.local.POSTRequestBody
+import create.develop.secondproj.data.loggin.remote.POSTRequestBody
 import create.develop.secondproj.state.UserInfoState
 import kotlinx.coroutines.delay
 

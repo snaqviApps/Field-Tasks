@@ -1,9 +1,14 @@
 package create.develop.secondproj.data.loggin.remote
 
+import create.develop.secondproj.data.loggin.remote.logindetailsdata.Address
+import create.develop.secondproj.data.loggin.remote.logindetailsdata.Bank
+import create.develop.secondproj.data.loggin.remote.logindetailsdata.Company
+import create.develop.secondproj.data.loggin.remote.logindetailsdata.Crypto
+import create.develop.secondproj.data.loggin.remote.logindetailsdata.Hair
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserProfile(
+data class UserFetchedDetails(
     val address: Address,
     val age: Int,
     val bank: Bank = Bank(

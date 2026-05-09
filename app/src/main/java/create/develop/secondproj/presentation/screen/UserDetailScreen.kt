@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -19,24 +20,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import create.develop.secondproj.data.loggin.remote.Address
-import create.develop.secondproj.data.loggin.remote.Coordinates
-import create.develop.secondproj.data.loggin.remote.UserDetails
+import create.develop.secondproj.data.loggin.remote.logindetailsdata.Address
+import create.develop.secondproj.data.loggin.remote.logindetailsdata.Coordinates
+import create.develop.secondproj.data.loggin.remote.UserUIDetails
+import create.develop.secondproj.presentation.UserInputViewModel
 
 @Composable
 fun UserDetailScreen(
-//    firstName: String,
-//    gender: String,
-//    image: String,
-//    lastName: String,
-//    birthDate: String,
-//    bloodGroup: String,
-//    address: Address?,
-//    business: Address?,
-    userDetail: UserDetails,
-
     modifier: Modifier = Modifier,
+    userDetail: UserUIDetails,
+    viewModel: UserInputViewModel = viewModel()
 ) {
     Card(
         modifier = modifier
@@ -67,72 +62,112 @@ fun UserDetailScreen(
                         .background(Color(0x42EAECEA))
                         .padding(top = 12.dp, start = 2.dp, end = 12.dp)
                 ) {
-                    Text(text = "Blood group:", fontWeight = FontWeight.Bold)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 4.dp, end = 4.dp)
+                    ) {
+                        Text(
+                            text = "Blood group:\t\t\t${userDetail.bloodGroup}",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                     Spacer(Modifier.height(6.dp))
-                    Text(text = "Gender:", fontWeight = FontWeight.Bold)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 4.dp, end = 4.dp)
+                    ) {
+                        Text(
+                            text = "Gender:\t\t\t\t\t\t\t${userDetail.gender}",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                     Spacer(Modifier.height(6.dp))
-                    Text(text = "Birth date:", fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(text = "Address:", fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Text(text = "Business:", fontWeight = FontWeight.Bold)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 4.dp, end = 4.dp)
+                    ) {
+                        Text(
+                            text = "Birth date:\t\t\t\t\t${userDetail.birthDate}",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 4.dp, end = 4.dp, top = 12.dp)
+                    ) {
+                        // Improved Address formatting to avoid "null" strings
+                        val addressText = if (userDetail.address != null) {
+                            listOfNotNull(
+                                userDetail.address.address,
+                                userDetail.address.city,
+                                userDetail.address.state,
+                                userDetail.address.country
+                            )
+                                .filter { it.isNotBlank() }
+                                .joinToString(", ")
+                        } else "N/A"
+                        Text(text = "Address:\t\t\t\t\t$addressText", fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 4.dp, end = 4.dp)
+                    ) {
+                        // Improved Business Address formatting
+                        val businessText = if (userDetail.business != null) {
+                            listOfNotNull(
+                                userDetail.business.address,
+                                userDetail.business.city,
+                                userDetail.business.state,
+                                userDetail.business.country
+                            )
+                                .filter { it.isNotBlank() }
+                                .joinToString(", ")
+                        } else "No business information available"
+                        Text(text = "Business:\t\t\t\t\t$businessText")
+                    }
+                    Spacer(Modifier.height(12.dp))
+                    Button(
+                        onClick = {
+                            viewModel.testRefresh()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = CardDefaults.elevatedShape,
+                        ) {
+                        Text(text = "Test Refresh Token")
+                    }
                 }
-                
-                Column(
-                    modifier = Modifier
-                        .background(Color(0x42EAECEA))
-                        .padding(top = 12.dp, start = 4.dp, end = 12.dp)
-                ) {
-                    Text(text = userDetail.bloodGroup)
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(text = userDetail.gender)
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(text = userDetail.birthDate)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    
-                    // Improved Address formatting to avoid "null" strings
-                    val addressText = if (userDetail.address != null) {
-                        listOfNotNull(userDetail.address.address, userDetail.address.city, userDetail.address.state, userDetail.address.country)
-                            .filter { it.isNotBlank() }
-                            .joinToString(", ")
-                    } else "N/A"
-                    Text(text = addressText)
-                    
-                    Spacer(modifier = Modifier.height(12.dp))
-                    
-                    // Improved Business Address formatting
-                    val businessText = if (userDetail.business != null) {
-                        listOfNotNull(userDetail.business.address, userDetail.business.city, userDetail.business.state, userDetail.business.country)
-                            .filter { it.isNotBlank() }
-                            .joinToString(", ")
-                    } else "No business information available"
-                    Text(text = businessText)
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp, start = 2.dp, end = 24.dp)
-            ) {
-                AsyncImage(
-                    model = userDetail.image,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(top = 12.dp)
-                        .height(120.dp)
-                        .width(140.dp)
-                )
             }
         }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, start = 2.dp, end = 24.dp)
+        ) {
+            AsyncImage(
+                model = userDetail.image,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(top = 12.dp)
+                    .height(120.dp)
+                    .width(140.dp)
+            )
+        }
     }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun UserDetailScreenPreview() {
     UserDetailScreen(
-        userDetail = UserDetails(
+        userDetail = UserUIDetails(
             firstName = "John",
             lastName = "Doe",
             gender = "Male",
@@ -149,7 +184,7 @@ fun UserDetailScreenPreview() {
                 postalCode = "12345",
                 coordinates = Coordinates(lat = 40.7128, lng = -74.0060),
                 stateCode = "ST"
-        ),
+            ),
             business = Address(
                 address = "456 Business St",
                 city = "Businessville",

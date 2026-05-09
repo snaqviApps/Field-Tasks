@@ -1,6 +1,6 @@
 package create.develop.secondproj.state
 
-import create.develop.secondproj.data.loggin.local.POSTRequestBody
+import create.develop.secondproj.data.loggin.remote.POSTRequestBody
 
 
 sealed interface UserInfoState {

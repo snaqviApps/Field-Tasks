@@ -1,5 +1,6 @@
 package create.develop.secondproj.data.loggin.remote
 
+import create.develop.secondproj.data.loggin.remote.logindetailsdata.Address
 import kotlinx.serialization.Serializable
 
 data class LoginResponse(
@@ -14,8 +15,8 @@ data class LoginResponse(
     val username: String
 )
 
-fun UserProfile.toUserDetails() : UserDetails {
-    return UserDetails(
+fun UserFetchedDetails.toUserDetails() : UserUIDetails {
+    return UserUIDetails(
         email = email,
         firstName = firstName,
         gender = gender,
@@ -29,7 +30,7 @@ fun UserProfile.toUserDetails() : UserDetails {
 }
 
 @Serializable
-data class UserDetails (
+data class UserUIDetails (
     val email: String,
     val firstName: String,
     val gender: String,

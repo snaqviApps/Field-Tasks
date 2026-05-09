@@ -4,9 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import create.develop.secondproj.data.UserServices
-import create.develop.secondproj.data.loggin.local.POSTRequestBody
+import create.develop.secondproj.data.loggin.remote.POSTRequestBody
 import create.develop.secondproj.data.loggin.remote.toUserDetails
-import create.develop.secondproj.domain.UserApi
+import create.develop.secondproj.domain.SessionManager
+import create.develop.secondproj.domain.usecase.LoginUseCase
 import create.develop.secondproj.presentation.navigation.UiEvent
 import create.develop.secondproj.state.UserInfoState
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,7 +18,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class UserInputViewModel(
-    private val useServices: UserApi = UserServices()
+    // We create an instance of services to share between the UseCase and the ViewModel test functions
+    private val userServices: UserServices = UserServices(),
+    private val loginUseCase: LoginUseCase = LoginUseCase(userServices)
 ) : ViewModel() {
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
@@ -28,56 +31,52 @@ class UserInputViewModel(
     val userInputState = _userInputState.asStateFlow()
 
     fun login() {
-        val currentState = _userInputState.value
-
-        // We only start login if we are currently in a Success (Input) state
-        if (currentState !is UserInfoState.Success) return
-
+        val currentState = _userInputState.value as? UserInfoState.Success ?: return
         val requestBody = currentState.postRequestBody
 
         viewModelScope.launch {
             _userInputState.value = UserInfoState.Loading
             try {
-                // 1. Perform Login
-                val loginResponse = useServices.loginUser(requestBody)
-                if (!loginResponse.isSuccessful) {
-                    _userInputState.value = UserInfoState.Error("Login failed: ${loginResponse.message()}")
-                    return@launch
-                }
+                // The UseCase now handles:
+                // 1. API Login
+                // 2. Saving tokens to SessionManager (Business Logic)
+                // 3. Fetching User Profile
+                val userFetchedDetails = loginUseCase.execute(requestBody)
 
-                // 2. Validate Token
-                val token = loginResponse.body()?.accessToken
-                if (token.isNullOrEmpty()) {
-                    _userInputState.value = UserInfoState.Error("Login succeeded but no token was received")
-                    return@launch
-                }
+                // Success path: Transform the data model to the UI model and navigate
+                val userUIDetails = userFetchedDetails.toUserDetails()
+                Log.d("UserInputViewModel", "Login flow completed for: ${userUIDetails.email}")
 
-                // 3. Fetch User Info
-                val infoResponse = useServices.getUserInfo("Bearer $token")
-                if (!infoResponse.isSuccessful) {
-                    _userInputState.value = UserInfoState.Error("Failed to fetch profile: ${infoResponse.code()}")
-                    return@launch
-                }
-
-                // 4. Validate & Objectify Body
-                val userInfo = infoResponse.body()
-                if (userInfo == null) {
-                    _userInputState.value = UserInfoState.Error("User profile data is empty")
-                    return@launch
-                }
-
-                // SUCCESS PATH
-                val userDetails = userInfo.toUserDetails()
-                Log.d("UserInputViewModel", "Fetch success: ${userDetails.email}")
-                
-                _uiEvent.emit(UiEvent.NavigateToDetail(userDetails))
+                _uiEvent.emit(UiEvent.NavigateToDetail(userUIDetails))
                 
                 // Reset state for future use
                 _userInputState.value = UserInfoState.Success(POSTRequestBody())
 
             } catch (e: Exception) {
-                Log.e("UserInputViewModel", "Operation failed", e)
+                Log.e("UserInputViewModel", "Login flow failed", e)
                 _userInputState.value = UserInfoState.Error(e.localizedMessage ?: "An unexpected error occurred")
+            }
+        }
+    }
+
+    fun testRefresh() {
+        // Clear token to force a 401 and trigger the silent refresh in Authenticator
+        SessionManager.accessToken = null
+        Log.d("TestRefresh", "Token cleared. Making request to trigger silent refresh...")
+
+        viewModelScope.launch {
+            try {
+                // This call will hit a 401, causing the Authenticator to run
+                val response = userServices.getUserInfo()
+
+                if (response.isSuccessful) {
+                    Log.d("TestRefresh", "SUCCESS! Authenticator refreshed token and retried successfully.")
+                    Log.d("TestRefresh", "New Token: ${SessionManager.accessToken}")
+                } else {
+                    Log.e("TestRefresh", "Failed with code: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                Log.e("TestRefresh", "Request failed", e)
             }
         }
     }
